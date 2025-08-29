@@ -14,6 +14,7 @@ email = "thiago@gmail.com"
 senha = "R9!p2@Lz"
 
 while True:
+    print("\n --- Validador de E-mail --- ")
     email_digitado = input("Digite o email: ")
     senha_digitada = input("Digite a senha: ")
 
@@ -31,7 +32,7 @@ while True:
     else:
         print("E-mail inválido!")
 
-    continua_validador = input("Quer validar outro e-mail (s/n):")
+    continua_validador = input("Quer validar outro e-mail (s/n): ")
     continua_validador_formatado = continua_validador.lower()
 
     if continua_validador_formatado == "s":
@@ -39,4 +40,4 @@ while True:
     else:
         break
 
-print("Validador Encerrado...!")
+print("\nValidador Encerrado...!")
