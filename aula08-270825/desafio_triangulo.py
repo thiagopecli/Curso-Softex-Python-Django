@@ -47,7 +47,7 @@ while True:
         else:
             print("Erro: O valor do lado deve ser um número positivo.")
     else:
-        print("Erro: A entrada contém caracteres que não são números.")
+        print("Erro: A entrada não contém números.")
 
                 # --- Lado B --- #
 
@@ -67,7 +67,7 @@ while True:
         else:
             print("Erro: O valor do lado deve ser um número positivo.")
     else:
-        print("Erro: A entrada contém caracteres que não são números.")
+        print("Erro: A entrada não contém números.")
 
                 # --- Lado C --- #
 
@@ -87,12 +87,12 @@ while True:
         else:
             print("Erro: O valor do lado deve ser um número positivo.")
     else:
-        print("Erro: A entrada contém caracteres que não são números.")
+        print("Erro: A entrada não contém números.")
 
 
 print(f"\nLados digitados: A = {lado_a}, B = {lado_b}, C = {lado_c}")
 
 if (lado_a > abs(lado_b - lado_c)) and (lado_b > abs(lado_a - lado_c)) and (lado_c > abs(lado_a - lado_b)):
-    print("\nResultado: As medidas digitados PODEM formar um triângulo.")
+    print("\nResultado: As medidas digitadas formam um triângulo.")
 else:
-    print("\nResultado: As medidas digitados não formam um triângulo.")
+    print("\nResultado: As medidas digitadas não formam um triângulo.")
