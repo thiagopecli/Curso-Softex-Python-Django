@@ -38,11 +38,11 @@ while True:
         print("Erro: A entrada é inválida.")
         continue
     
-    string_para_teste = entrada_valor.replace('.', '', 1)
+    string_teste = entrada_valor.replace('.', '', 1)
 
-    if string_para_teste.isdigit():
-        la = float(entrada_valor)
-        if la > 0:
+    if string_teste.isdigit():
+        lado_a = float(entrada_valor)
+        if lado_a > 0:
             break
         else:
             print("Erro: O valor do lado deve ser um número positivo.")
@@ -58,11 +58,11 @@ while True:
         print("Erro: A entrada é inválida.")
         continue
         
-    string_para_teste = entrada_valor.replace('.', '', 1)
+    string_teste = entrada_valor.replace('.', '', 1)
 
-    if string_para_teste.isdigit():
-        lb = float(entrada_valor)
-        if lb > 0:
+    if string_teste.isdigit():
+        lado_b = float(entrada_valor)
+        if lado_b > 0:
             break
         else:
             print("Erro: O valor do lado deve ser um número positivo.")
@@ -78,11 +78,11 @@ while True:
         print("Erro: A entrada é inválida.")
         continue
         
-    string_para_teste = entrada_valor.replace('.', '', 1)
+    string_teste = entrada_valor.replace('.', '', 1)
 
-    if string_para_teste.isdigit():
-        lc = float(entrada_valor)
-        if lc > 0:
+    if string_teste.isdigit():
+        lado_c = float(entrada_valor)
+        if lado_c > 0:
             break
         else:
             print("Erro: O valor do lado deve ser um número positivo.")
@@ -90,9 +90,9 @@ while True:
         print("Erro: A entrada contém caracteres que não são números.")
 
 
-print(f"\nLados fornecidos: A = {la}, B = {lb}, C = {lc}")
+print(f"\nLados digitados: A = {lado_a}, B = {lado_b}, C = {lado_c}")
 
-if (la > abs(lb - lc)) and (lb > abs(la - lc)) and (lc > abs(la - lb)):
-    print("\nResultado: As medidas fornecidos PODEM formar um triângulo.")
+if (lado_a > abs(lado_b - lado_c)) and (lado_b > abs(lado_a - lado_c)) and (lado_c > abs(lado_a - lado_b)):
+    print("\nResultado: As medidas digitados PODEM formar um triângulo.")
 else:
-    print("\nResultado: As medidas fornecidos não formam um triângulo.")
+    print("\nResultado: As medidas digitados não formam um triângulo.")
