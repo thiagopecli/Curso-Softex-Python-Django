@@ -27,7 +27,7 @@ Dica: use o método abs() para ter o valor absoluto de um número."""
 ################################################################################################
 
 print("--- Validador de Triângulo ---")
-print("Por favor, forneça a medida dos três lados.")
+print("Digite a medida dos três lados.")
 
                 # --- Lado A --- #
 
