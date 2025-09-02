@@ -11,8 +11,27 @@ final, imprima a soma dos números válidos e a lista dos números coletados.
 ● Saída: A soma dos números válidos e a lista dos números coletados. 
 """
 
+lista = []
+contador = 0
+
 while True:
     print("Para sair digite -1")
     usuario = input("Digite um número: ")
-    lista_nova = []
-    print(usuario)
+
+    if usuario == "-1":
+        print("Saindo...")
+        break
+
+    if usuario.isdigit() or usuario.startswith("-") and usuario[1:].isdigit():
+        numero = int(usuario)
+
+        if 0 <= numero <= 100:
+            lista.append(numero)
+            contador += numero
+        else:
+            print("Digite um numero entre 0 e 100!")
+    else:
+        print("Digite apenas números.")
+
+print(f"Soma de todos os números: {contador}.")
+print(f"Lista: {lista}")

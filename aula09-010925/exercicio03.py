@@ -14,13 +14,15 @@ lista_primos = []
 
 for i in lista:
     eh_primo = True
-    if lista < 2:
+    if i < 2:
         eh_primo = False
     else:
-        for i in range(2, lista):
-            if lista % i == 0:
+        for n in range(2, i):
+            if i % n == 0:
                 eh_primo = False
                 break
     if eh_primo:
-        lista_primos.append(lista)
-        print(lista_primos)
+        lista_primos.append(i)
+
+print(lista)
+print(lista_primos)
