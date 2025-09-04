@@ -41,5 +41,10 @@ for entrada, status, tempo in registros:
         total_tempo += tempo
 
 print(f"Registro de acessos: {registros}")
-print(f"Acessos bem-sucedidos: {sucessso}")
+
+if sucessso:
+    print(f"Acessos bem-sucedidos: {sucessso}")
+else:
+    print("Acessos bem-sucedidos: Nenhum")
+    
 print(f"Tempo total dos acessos com sucesso(em minutos): {total_tempo}")
