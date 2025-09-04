@@ -19,14 +19,14 @@ while True:
             status = "falha"
             break
         else:
-            print("Opção inválida!")
+            print("Opção inválida, digite novamente!")
 
     while True:
         try:
             tempo = int(input("Digite o tempo em minutos: "))
             break
         except ValueError:
-            print("Tempo inválido!")
+            print("Tempo inválido, digite novamente!")
 
 
     registros.append((entrada, status, tempo))
