@@ -45,6 +45,6 @@ print(f"Registro de acessos: {registros}")
 if sucessso:
     print(f"Acessos bem-sucedidos: {sucessso}")
 else:
-    print("Acessos bem-sucedidos: Nenhum")
+    print("Usuários com acesso bem-sucedido: Nenhum")
     
-print(f"Tempo total dos acessos com sucesso(em minutos): {total_tempo}")
+print(f"Tempo total das sessões bem-sucedidas: {total_tempo} minutos")
