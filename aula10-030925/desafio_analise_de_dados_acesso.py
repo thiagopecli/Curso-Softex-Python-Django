@@ -38,4 +38,4 @@ total_tempo = 0
 for entrada, status, tempo in registros:
     if status == "sucesso":
         total_tempo += tempo
-print(f"Tempo total dos acessos(em minutos): {total_tempo}")
+print(f"Tempo total dos acessos com sucesso(em minutos): {total_tempo}")
