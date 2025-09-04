@@ -12,6 +12,7 @@ while True:
 
     while True:
         status = input("Opção: ")
+        
         if status == "1":
             status = "sucesso"
             break
