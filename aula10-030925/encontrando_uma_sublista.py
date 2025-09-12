@@ -1,5 +1,5 @@
-lista_principal = [10, 20, 30, 40, 50]
-sublista = input("Digite um número: ")
+lista_principal = [10, 20, 30, 40]
+sublista = [10, 50, 60, 70]
 
 len_principal = len(lista_principal)
 len_sublista = len(sublista)
