@@ -1,9 +1,7 @@
-"""
+"""Nível Básico (Foco em def e return)
+1.  Saudação Simples: Crie uma função chamada saudar que imprima "Olá, mundo!"."""
 
-"""
+def saudar():
+    print("Olá, mundo!")
 
-def diga_oi():
-    print("Oi! Tudo bem?")
-
-diga_oi() #imprime apenas a função
-print(diga_oi()) # imprime com "None" no fim
+saudar()
