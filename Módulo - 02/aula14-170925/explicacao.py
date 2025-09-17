@@ -1,13 +1,34 @@
 class Cachorro:
-    def __init__(self, nome:str, cor:str)-> None:
+    def __init__(self, nome: str, cor: str) -> None:
         self.nome = nome
         self.cor = cor
 
-    def latir(self, fala:str) -> None:
-        print(f"{self.nome} diz: {fala}au au!")
+    def latir(self, fala: str) -> None:
+        print(f"{self.nome} diz: {fala}!")
 
-rex = Cachorro("rex", "preto")
-bela = Cachorro("bela", "branco")
+# cria um objeto do tipo class Cachorro
+meu_cachorro = Cachorro("Rex", "preto")
 
-print(f"Meu cachorro se chama {rex.nome} e tem a cor {rex.cor}")
-rex.latir("")
+# nome e cor são atributos (variaves) da class Cachorro
+# por isso não são chamadas com parênteses: ()
+print(meu_cachorro.nome)
+print(meu_cachorro.cor)
+
+# chama o método (função) latir passando parâmento
+meu_cachorro.latir("Miau")
+
+##################################################
+
+# class Cachorro:
+#     def __init__(self, nome:str, cor:str)-> None:
+#         self.nome = nome
+#         self.cor = cor
+
+#     def latir(self, fala:str) -> None:
+#         print(f"{self.nome} diz: {fala}au au!")
+
+# rex = Cachorro("rex", "preto")
+# bela = Cachorro("bela", "branco")
+
+# print(f"Meu cachorro se chama {rex.nome} e tem a cor {rex.cor}")
+# rex.latir("")
