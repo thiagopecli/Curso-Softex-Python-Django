@@ -28,26 +28,30 @@ class Carro():
             self.nivel_combustivel -= consumo_necessario
             print(f"O {self.modelo} andou {distancia} km.")
         else:
-            print(f"Não há combustível suficiente para o {self.modelo} andar {distancia} km.")
+            print((
+                f"Não há combustível suficiente para o {self.modelo} andar" 
+                f" {distancia} km."))
     
     def mostrar_combustivel(self) -> None:
         """Exibe o nível atual de combustível."""
-        print(f"O nível de combustível do {self.modelo} é: {self.nivel_combustivel:.1f} litros.")
+        print((
+            f"O nível de combustível do {self.modelo} é: "
+            f"{self.nivel_combustivel:.1f} litros."))
 
 fusca = Carro("Fusca")
 fusca.mostrar_combustivel()
 
-print("\n--- Tentando dirigir sem combustível ---")
+print("\n- Tentando dirigir sem combustível -")
 fusca.dirigir(50)
 
-print("\n--- Abastecendo o carro ---")
+print("\n- Abastecendo o carro -")
 fusca.abastecer(20)
 fusca.mostrar_combustivel()
 
-print("\n--- Dirigindo com combustível ---")
+print("\n- Dirigindo com combustível -")
 fusca.dirigir(150)
 fusca.mostrar_combustivel()
 
-print("\n--- Tentando dirigir mais do que o possível ---")
+print("\n- Tentando dirigir mais do que o possível -")
 fusca.dirigir(60)
 fusca.mostrar_combustivel()

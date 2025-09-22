@@ -22,7 +22,7 @@ class Biblioteca:
         self.acervo.append(livro)
         print(f"-> O livro '{livro.titulo}' foi adicionado a biblioteca.")
     def listar_livros(self):
-        print("\n---- Livros no Acervo da Biblioteca ---")
+        print("\n---- Livros da Biblioteca ---")
         if not self.acervo:
             print("A biblioteca está vazia.")
         else:

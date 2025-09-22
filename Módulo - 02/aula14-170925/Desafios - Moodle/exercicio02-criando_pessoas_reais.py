@@ -13,7 +13,6 @@ class Pessoa:
 
 joao = Pessoa("João", 35)
 maria = Pessoa("Maria", 42)
-jurema = Pessoa("Jurema", 18)
 
 joao.dados()
 maria.dados()

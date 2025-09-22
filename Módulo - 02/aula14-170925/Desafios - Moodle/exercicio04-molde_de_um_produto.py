@@ -12,8 +12,8 @@ class Produto():
     def produto(self) -> None:
         print(f"Uma {self.nome} que custa R$ {self.preco:.2f}.")
 
-caderno = Produto("Caderno", 10)
-caneta = Produto("Caneta", 2.00)
+caderno = Produto("Caderno", 15.50)
+caneta = Produto("Caneta", 3.00)
 
 caderno.produto()
 caneta.produto()

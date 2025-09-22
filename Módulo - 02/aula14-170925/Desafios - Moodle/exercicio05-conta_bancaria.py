@@ -12,7 +12,7 @@ class ContaBancaria():
         if valor_a_depositar > 0:
             self.saldo += valor_a_depositar
             print((
-                f"Deposito de R$ {valor_a_depositar:.2f},"
+                f"Deposito de R$ {valor_a_depositar:.2f}, "
                 f"realizado com sucesso!"
             ))
         else:

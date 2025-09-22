@@ -9,9 +9,9 @@ class Pessoa():
         self.idade = idade
 
     def dados(self) -> None:
-        print(f"Meu nome é {self.nome} e eu tenho {self.idade} anos.")
+        print(f"Olá, meu nome é {self.nome} e eu tenho {self.idade} anos.")
 joao = Pessoa("João", 25)
-ana = Pessoa("Ana", 30)
+maria = Pessoa("Maria", 30)
 
 joao.dados()
-ana.dados()
+maria.dados()
