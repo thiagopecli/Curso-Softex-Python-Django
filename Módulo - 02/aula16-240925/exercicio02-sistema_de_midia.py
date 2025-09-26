@@ -36,11 +36,18 @@ class Video(Midia):
     def exibir(self):
         print((f"Titulo: {self.titulo}. Duração: {self.duracao} minutos. "
                f"Resolução: {self.resolucao} pixels."))
+        
+colecao = {
+    'musicas': [],
+    'videos': []
+}
 
-midia = Midia("Exemplo 01", 3)
 musica = Musica("Exemplo 02", 3, "José")
 video = Video("Exemplo 03", 3, "1080")
-lista = [midia, musica, video]
 
-for play in lista:
-    play.exibir()
+colecao['musicas'].append(musica)
+colecao["videos"].append(video)
+
+for tipo_midia, lista_de_midia in colecao.items():
+    for item in lista_de_midia:
+        item.exibir()
