@@ -1,0 +1,18 @@
+Exercício 1: Relacionamento Um para Muitos (1:N) 
+ 
+Cenário: Uma biblioteca precisa gerenciar livros e autores. 
+Passo 1: Inserção de Dados 
+●  Tabela autores: 
+○  Atributos: id_autor, nome, nacionalidade. 
+○  Pedidos de Inserção: 
+■  Insira 2 autores. 
+●  Tabela livros: 
+○  Atributos: id_livro, titulo, ano_publicacao, id_autor (chave estrangeira). 
+○  Pedidos de Inserção: 
+■  Insira 3 livros, associando-os aos autores que você criou. 
+Passo 2: Pedidos de Consulta 
+1.  Consulta sem JOIN: Selecione o título de todos os livros e o ano de publicação. 
+2.  Consulta com JOIN e filtro: Mostre o título de cada livro e o nome do seu autor. 
+3.  Consulta com JOIN e filtro WHERE: Mostre os títulos dos livros e os nomes dos 
+autores com a nacionalidade 'Britânica'. 
+4.  Consulta com COUNT: Conte quantos livros cada autor escreveu. 
