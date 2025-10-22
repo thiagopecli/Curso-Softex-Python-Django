@@ -1,6 +1,7 @@
 # user_model.py
 import sqlite3
 from datetime import datetime
+from typing import Tuple
 from database import DatabaseConnection
 
 
