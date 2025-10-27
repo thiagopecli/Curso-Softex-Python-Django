@@ -1,0 +1,65 @@
+import random
+
+# --- Exercício 2: Rotação de Lista ---
+def rotacionar_lista(lista: list, k: int) -> list:
+    """
+    Rotaciona a lista k posições para a direita.
+    Usa slicing de lista.
+    """
+    if not lista:
+        return []
+    
+    tamanho = len(lista)
+    # Normaliza k para evitar rotações desnecessárias
+    k = k % tamanho
+    
+    # Pega os últimos k elementos e os primeiros (tamanho - k) elementos
+    parte_final = lista[-k:]
+    parte_inicial = lista[:-k]
+    
+    # Junta as partes na nova ordem
+    return parte_final + parte_inicial
+
+# --- Exercício 11: Contagem de Palavras com Exceção ---
+def contar_palavras_com_excecao(texto: str) -> dict:
+    """
+    Conta a frequência de palavras em um texto usando try-except.
+    Retorna um dicionário com as contagens.
+    """
+    contagem = {}
+    palavras = texto.lower().split() # Converte para minúsculas e divide
+    
+    for palavra in palavras:
+        # Remove pontuações simples (exemplo básico)
+        palavra_limpa = palavra.strip('.,!?;:"()[]{}')
+        if not palavra_limpa: # Ignora strings vazias após limpar
+            continue
+            
+        try:
+            # Tenta incrementar a contagem se a chave já existe
+            contagem[palavra_limpa] += 1
+        except KeyError:
+            # Se a chave não existe (KeyError), inicializa com 1
+            contagem[palavra_limpa] = 1
+            
+    return contagem
+
+# --- Exercício 21: Classe Base ItemInventario ---
+class ItemInventario:
+    """
+    Representa um item no inventário com nome, quantidade e valor unitário.
+    """
+    def __init__(self, nome: str, quantidade: int, valor_unitario: float):
+        if quantidade < 0:
+            raise ValueError("Quantidade não pode ser negativa.")
+        if valor_unitario < 0:
+             raise ValueError("Valor unitário não pode ser negativo.")
+             
+        self.nome = nome
+        self.quantidade = quantidade
+        self.valor_unitario = valor_unitario
+
+    def valor_total(self) -> float:
+        """Calcula o valor total do item no estoque."""
+        return self.quantidade * self.valor_unitario
+
