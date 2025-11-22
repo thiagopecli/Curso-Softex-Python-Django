@@ -64,7 +64,7 @@ Cada exercício ou desafio está contido em seu próprio arquivo Python. Sinta-s
 *Este repositório está em constante atualização com novos aprendizados e desafios do curso.*
 
 python -m venv .venv
-.\venv\Scripts\activate
+.\.venv\Scripts\Activate.ps1  # PowerShell
 pip install -r .\requirements.txt
 cd .\modulo4\
 python manage.py makemigrations
