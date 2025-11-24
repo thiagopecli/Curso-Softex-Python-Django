@@ -63,8 +63,10 @@ Cada exercício ou desafio está contido em seu próprio arquivo Python. Sinta-s
 ---
 *Este repositório está em constante atualização com novos aprendizados e desafios do curso.*
 
+python manage.py createsuperuser
+
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1  # PowerShell
+.\.venv\Scripts\Activate.ps1 # Objetivo: Para salvar apenas no projeto. 
 pip install -r .\requirements.txt
 cd .\modulo4\
 python manage.py makemigrations
