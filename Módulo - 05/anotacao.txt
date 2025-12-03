@@ -1,0 +1,19 @@
+python -m venv .venv
+
+.\.venv\Scripts\activate
+
+pip install -r .\requirements.txt
+
+pip install django djangorestframework django-environ djangorestframework-simplejwt
+
+pip freeze > requirements.txt  # Criar o arquivo requeriments
+
+cd '.\Módulo - 05\'
+
+*** extensão para marcação de linha ***
+
+# Criar arquivo de migração
+python manage.py makemigrations core
+# Aplicar no banco
+python manage.py migrate
+
