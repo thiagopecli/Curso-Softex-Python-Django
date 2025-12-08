@@ -66,7 +66,7 @@ Cada exercício ou desafio está contido em seu próprio arquivo Python. Sinta-s
 python manage.py createsuperuser
 
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1 # Objetivo: Para salvar apenas no projeto, e não na raiz do computador. Pra não dar conflito. 
+.\.venv\Scripts\Activate
 pip install -r .\requirements.txt
 cd .\modulo4\
 python manage.py makemigrations
