@@ -72,7 +72,6 @@ class ContagemTarefasAPIView(APIView):
             'pendentes': pendentes,
         })
 
-
 class EstatisticasTarefasAPIView(APIView):
     def get(self, request):
         agregados = Tarefa.objects.aggregate(
