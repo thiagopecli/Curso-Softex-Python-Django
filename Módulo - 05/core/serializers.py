@@ -1,9 +1,7 @@
-from django.contrib.auth.models import User
-from django.utils import timezone
 from rest_framework import serializers
-
 from .models import Tarefa
-
+from datetime import date
+from django.utils import timezone
 
 class TarefaSerializer(serializers.ModelSerializer):
     titulo = serializers.CharField(
@@ -11,109 +9,63 @@ class TarefaSerializer(serializers.ModelSerializer):
         error_messages={
             'required': 'O título é obrigatório.',
             'blank': 'O título não pode ser vazio.',
-            'max_length': 'O título não pode ter mais de 200 caracteres.',
-        },
-    )
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
-        required=False,
-        default=serializers.CurrentUserDefault(),
-    )
-    prioridade = serializers.ChoiceField(
-        choices=Tarefa.PRIORIDADE_CHOICES,
-        default='media',
-    )
-    prazo = serializers.DateField(required=False, allow_null=True)
-
+            'max_length': 'O título não pode ter mais de 200 caracteres.'
+            }
+        )
     class Meta:
         model = Tarefa
-        fields = [
-            'id',
-            'user',
-            'titulo',
-            'descricao',
-            'prioridade',
-            'prazo',
-            'concluida',
-            'criada_em',
-        ]
+        fields = ['id', 'user', 'titulo', 'prioridade', 'descricao', 'prazo', 'concluida', 'data_conclusao' ,'criada_em']
         read_only_fields = ['id', 'criada_em']
 
+    def validate(self, data):
+        '''Implemente validação customizada:
+        • O prazo não pode ser no passado
+        • Se concluida=True, prazo não é obrigatório
+        • Se concluida=False, prazo é obrigatório '''
+        prazo = data.get('prazo')
+        concluida = data.get('concluida', False)
+        if prazo and prazo < date.today():
+            raise serializers.ValidationError(
+                "O prazo não pode ter data retroativa."
+            )
+        if concluida is False and prazo is None:
+            raise serializers.ValidationError(
+                "Tarefa não conluída o prazo é obrigatório!"
+            )
+        return data
+    
     def validate_titulo(self, value):
+        """
+        Validação customizada para o campo 'titulo'.
+        Regras:
+        - Não pode ser vazio (após strip)
+        - Não pode conter apenas números
+        - Deve ter pelo menos 3 caracteres
+        """
         value = value.strip()
-
         if not value:
             raise serializers.ValidationError(
                 "O título não pode ser vazio ou conter apenas espaços."
             )
-
         if len(value) < 3:
             raise serializers.ValidationError(
                 "O título deve ter pelo menos 3 caracteres."
             )
-
         if value.isdigit():
             raise serializers.ValidationError(
                 "O título não pode conter apenas números."
             )
-
-        request = self.context.get('request')
-        request_user = getattr(request, 'user', None)
-        initial_data = getattr(self, 'initial_data', {})
-        raw_user = initial_data.get('user') if isinstance(initial_data, dict) else None
-
-        user = None
-        if isinstance(raw_user, User):
-            user = raw_user
-        elif raw_user is not None:
-            try:
-                user = User.objects.get(pk=raw_user)
-            except User.DoesNotExist:
-                user = None
-
-        if user is None and request_user and request_user.is_authenticated:
-            user = request_user
-
-        if user and Tarefa.objects.filter(user=user, titulo=value).exists():
-            raise serializers.ValidationError(
-                "Você já tem uma tarefa com este título."
-            )
-
+            
         return value
+    
+    def update(self, instance, validated_data):
+        concluida_atual = instance.concluida
+        concluida_nova = validated_data.get("concluida", concluida_atual)
 
-    def validate_prioridade(self, value):
-        escolhas_validas = {choice[0] for choice in Tarefa.PRIORIDADE_CHOICES}
-        if value not in escolhas_validas:
-            raise serializers.ValidationError("Prioridade inválida.")
-        return value
+        if not concluida_atual and concluida_nova is True:
+            instance.data_conclusao = timezone.now()
 
-    def validate(self, attrs):
-        user_from_attrs = attrs.get('user')
-        request_user = getattr(self.context.get('request'), 'user', None)
+        if concluida_atual and concluida_nova is False:
+            instance.data_conclusao = None
 
-        if user_from_attrs is None and request_user and request_user.is_authenticated:
-            attrs['user'] = request_user
-        elif user_from_attrs is None:
-            raise serializers.ValidationError(
-                {"user": "Usuário é obrigatório."}
-            )
-
-        prazo_atual = self.instance.prazo if self.instance else None
-        concluida_atual = self.instance.concluida if self.instance else False
-
-        prazo = attrs.get('prazo', prazo_atual)
-        concluida = attrs.get('concluida', concluida_atual)
-
-        if prazo:
-            today = timezone.localdate()
-            if prazo < today:
-                raise serializers.ValidationError(
-                    {"prazo": "O prazo não pode ser no passado."}
-                )
-
-        if concluida is False and prazo is None:
-            raise serializers.ValidationError(
-                {"prazo": "Prazo é obrigatório para tarefas pendentes."}
-            )
-
-        return attrs
+        return super().update(instance, validated_data)
