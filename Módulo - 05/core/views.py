@@ -6,10 +6,15 @@ from .serializers import TarefaSerializer
 from django.db import IntegrityError
 import logging
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 logger = logging.getLogger(__name__)
 
 class ListaTarefasAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         user_id = request.query_params.get('user_id')
         if user_id:
@@ -24,7 +29,7 @@ class ListaTarefasAPIView(APIView):
         try:
             serializer = TarefaSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(user=self.request.user)
                 logger.info(f"Tarefa criada: {serializer.data['id']}")
                 return Response(
                     serializer.data,
@@ -48,9 +53,6 @@ class ListaTarefasAPIView(APIView):
                 {'error': 'Erro interno do servidor.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-    
-
-        
 
 class DetalheTarefaAPIView(APIView):
     def get_object(self, pk):
@@ -93,9 +95,7 @@ class DetalheTarefaAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-           
+            
 class ContagemTarefasAPIView(APIView):
     def get(self, request):
         total = Tarefa.objects.count()
@@ -139,3 +139,28 @@ class ConcluirTarefaLoteAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+class MinhaView(APIView):
+    # Adicionando a permissão
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+    # Se chegou aqui, request.user é SEMPRE um objeto User logado
+        return Response(f"Usuario autenticado: (request.user.username)",
+                        status=status.HTTP_200_OK,)
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        try:
+            refresh_token = request.data.get("refresh")
+            token = RefreshToken(refresh_token)
+            token.blacklist() # Adiciona o token à lista negra
+            return Response(
+                {"detail": "Logout realizado com sucesso."},
+                status=status.HTTP_205_RESET_CONTENT # 205 é a resposta padrão para "reset content"
+                )
+        except Exception: # Captura exceções como token_not_valid
+            return Response(
+            {"detail": "Token inválido."},
+            status=status.HTTP_400_BAD_REQUEST
+    )

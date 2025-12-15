@@ -4,6 +4,8 @@ from .views import ContagemTarefasAPIView
 from .views import EstatisticasTarefasAPIView
 from .views import DetalheTarefaAPIView
 from .views import ConcluirTarefaLoteAPIView
+from .views import MinhaView
+from .views import LogoutView
 
 app_name = 'core'
 urlpatterns = [
@@ -14,4 +16,6 @@ urlpatterns = [
     path('tarefas/<int:pk>/', DetalheTarefaAPIView.as_view(), name='detalhe-tarefa'),
     path('tarefas/<int:pk>/duplicar/', DetalheTarefaAPIView.as_view()),
     path('tarefas/concluir-todas/', ConcluirTarefaLoteAPIView.as_view()),
+    path('teste/', MinhaView.as_view(), name= 'teste-autenticidade'),
+    path('logout/', LogoutView.as_view(), name='logout'), # ← Novo endpoint
 ]
