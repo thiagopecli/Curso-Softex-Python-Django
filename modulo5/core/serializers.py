@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Tarefa
 from datetime import date
 from django.utils import timezone
+from django.contrib.auth.models import User, Group
 
 class TarefaSerializer(serializers.ModelSerializer):
     titulo = serializers.CharField(
@@ -18,13 +19,13 @@ class TarefaSerializer(serializers.ModelSerializer):
         model = Tarefa
         fields = ['id', 'user', 'titulo', 'prioridade', 'descricao', 'prazo', 'concluida', 'data_conclusao' ,'criada_em']
         read_only_fields = ['id', 'user', 'criada_em']
-    def validate(self, data):
+    def validate(self, attrs):
         '''Implemente validação customizada:
         • O prazo não pode ser no passado
         • Se concluida=True, prazo não é obrigatório
         • Se concluida=False, prazo é obrigatório '''
-        prazo = data.get('prazo')
-        concluida = data.get('concluida', False)
+        prazo = attrs.get('prazo')
+        concluida = attrs.get('concluida', False)
         if prazo and prazo < date.today():
             raise serializers.ValidationError(
                 "O prazo não pode ter data retroativa."
@@ -33,7 +34,7 @@ class TarefaSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Tarefa não conluída o prazo é obrigatório!"
             )
-        return data
+        return attrs
     
     def validate_titulo(self, value):
         """
@@ -70,3 +71,30 @@ class TarefaSerializer(serializers.ModelSerializer):
             instance.data_conclusao = None
 
         return super().update(instance, validated_data)
+    
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+    write_only=True,
+    required=True,
+    style={'input_type': 'password'}
+    )
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+    def create(self, validated_data):
+        """
+        Intercepta a criação para usar o 'create_user' e hashear a senha.
+        """
+        password = validated_data.pop('password')
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=password
+        )
+        try:
+            grupo_comum = Group.objects.get(name='Comum')
+            user.groups.add(grupo_comum)
+        except Group.DoesNotExist:
+            pass
+
+        return user

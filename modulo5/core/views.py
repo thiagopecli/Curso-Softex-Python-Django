@@ -8,6 +8,11 @@ import logging
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+from .serializers import UserRegistrationSerializer
+from django.contrib.auth.models import User
+from .permissions import IsGerente
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +33,8 @@ class ListaTarefasAPIView(APIView):
         try:
             serializer = TarefaSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save(user=self.request.user)
-                logger.info(f"Tarefa criada: {serializer.data['id']}")
+                tarefa_criada = serializer.save(user=self.request.user)
+                logger.info(f"Tarefa criada: {tarefa_criada.id}")
                 return Response(
                     serializer.data,
                     status=status.HTTP_201_CREATED
@@ -85,7 +90,7 @@ class DetalheTarefaAPIView(APIView):
     
     def post(self, request, pk, formt=None):
         tarefa_original = self.get_object(pk)
-        data = TarefaSerializer(tarefa_original).data
+        data = dict(TarefaSerializer(tarefa_original).data)
         data.pop("id", None)
         data["concluida"] = False
 
@@ -134,7 +139,7 @@ class ConcluirTarefaLoteAPIView(APIView):
         if not isinstance(ids, list) or len(ids) == 0:
             return Response({"error": "Envie uma lista de IDs"}, status=status.HTTP_400_BAD_REQUEST)
         
-        atualizadas = Tarefa.objects.filter(id_in=ids).update(concluida=True)
+        atualizadas = Tarefa.objects.filter(id__in=ids).update(concluida=True)
 
         return Response(
             {
@@ -148,8 +153,8 @@ class ConcluirTarefaLoteAPIView(APIView):
 class MinhaView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        return Response(f"Usuario autenticado: (request.user.username)",
-                        status=status.HTTP_200_OK,)
+        return Response(f"Usuario autenticado: {request.user.username}",
+                        status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -164,10 +169,10 @@ class LogoutView(APIView):
                 )
         except Exception:
             return Response(
-            {"detail": "Token inválido."},
-            status=status.HTTP_400_BAD_REQUEST
-    )
-        
+                {"detail": "Token inválido."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -218,3 +223,49 @@ class StatsView(APIView):
             'pendentes': pendentes,
             'taxa_conclusao': round(taxa_conclusao, 2)
         })
+
+class TarefaListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = TarefaSerializer
+    permission_classes = [IsAuthenticated] # Exige Token válido
+    
+    def get_queryset(self):
+        """
+        Sobrescreve o comportamento padrão para retornar APENAS
+        os dados pertencentes ao usuário logado.
+        """
+        user = self.request.user
+        return Tarefa.objects.filter(user=user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class TarefaRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TarefaSerializer    
+    def get_queryset(self):
+        """
+        Garante que operações de detalhe (GET, PUT, DELETE por ID)
+        só encontrem o objeto se ele pertencer ao usuário.
+        Gerentes ou superusers podem acessar todas as tarefas.
+        """
+        user = self.request.user
+
+        if user.is_superuser or user.groups.filter(name='Gerente').exists():
+            return Tarefa.objects.all()
+        return Tarefa.objects.filter(user=user)
+    def get_permissions(self):
+        """
+        Instancia e retorna a lista de permissões que esta view requer,
+        dependendo do método HTTP da requisição.
+        """
+        if self.request.method == 'DELETE':
+            return [IsAuthenticated(), IsGerente()]
+        return [IsAuthenticated()]
+
+
+class RegisterView(generics.CreateAPIView):
+    """
+    Endpoint para cadastro de novos usuários.
+    Acesso: Público (Qualquer um pode criar conta).
+    """
+    queryset = User.objects.all()
+    permission_classes = [AllowAny] # Sobrescreve o padrão global
+    serializer_class = UserRegistrationSerializer

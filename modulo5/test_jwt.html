@@ -403,6 +403,132 @@
             <div id="logoutResponse"></div>
         </div>
 
+        <!-- CAPÍTULO 6: Testes de Segurança -->
+        <div class="info" style="margin-top: 40px;">
+            <strong>🔐 CAPÍTULO 6: Testes de Segurança Completa</strong>
+            <p style="margin-top: 10px; color: #e0e0e0;">
+                Testes de RBAC (Role-Based Access Control) e Row Level Security
+            </p>
+        </div>
+
+        <!-- Teste 6.1: Registrar Novo Usuário -->
+        <div class="section">
+            <h2>👤 Teste 6.1 - Registrar Novo Usuário</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Cria um novo usuário que é automaticamente atribuído ao grupo "Comum"
+            </p>
+            <div class="form-group">
+                <label for="regUsername">Username:</label>
+                <input type="text" id="regUsername" placeholder="Ex: funcionario">
+            </div>
+            <div class="form-group">
+                <label for="regEmail">Email:</label>
+                <input type="text" id="regEmail" placeholder="Ex: func@empresa.com">
+            </div>
+            <div class="form-group">
+                <label for="regPassword">Senha:</label>
+                <input type="password" id="regPassword" placeholder="Ex: 123456">
+            </div>
+            <button onclick="registrarUsuario()">Registrar</button>
+            <div id="registroResponse"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>✅ Esperado:</strong> Status 201 Created - Usuário criado e adicionado ao grupo "Comum"
+            </div>
+        </div>
+
+        <!-- Teste 6.2: Isolamento de Dados (Row Level Security) -->
+        <div class="section">
+            <h2>🔒 Teste 6.2 - Isolamento de Dados (Row Level Security)</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Cada usuário vê apenas suas próprias tarefas, não as de outros usuários
+            </p>
+            <button onclick="getTarefasComSeguranca()">Listar APENAS Minhas Tarefas</button>
+            <div id="tarefasSegurancaResponse"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>✅ Esperado:</strong> Lista vazia [] se nenhuma tarefa foi criada, ou apenas tarefas do usuário logado. Tarefas de outros usuários não devem aparecer.
+            </div>
+        </div>
+
+        <!-- Teste 6.3: Bloqueio de DELETE (RBAC) -->
+        <div class="section">
+            <h2>🚫 Teste 6.3 - RBAC: Bloqueio de DELETE (Grupo Comum)</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Usuários no grupo "Comum" NÃO podem deletar tarefas. Esperado: 403 Forbidden
+            </p>
+            <div class="form-group">
+                <label for="tarefaIdDelete">ID da Tarefa para Deletar:</label>
+                <input type="text" id="tarefaIdDelete" placeholder="Ex: 10">
+            </div>
+            <button onclick="tentarDeletarSemPermissao()" class="btn-danger">Tentar Deletar (Sem Permissão)</button>
+            <div id="deleteNaoPermResponse"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>✅ Esperado:</strong> Status 403 Forbidden com mensagem "Você não tem permissão para executar essa ação."
+            </div>
+        </div>
+
+        <!-- Teste 6.4: Sucesso de DELETE (RBAC com Gerente) -->
+        <div class="section">
+            <h2>✅ Teste 6.4 - RBAC: DELETE com Sucesso (Grupo Gerente)</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Usuários no grupo "Gerente" PODEM deletar tarefas. Esperado: 204 No Content
+            </p>
+            <div class="form-group">
+                <label>Passos necessários:</label>
+                <ol style="margin: 10px 0 0 20px; color: #e0e0e0;">
+                    <li>Acesse Django Admin (/admin)</li>
+                    <li>Localize o usuário logado</li>
+                    <li>Adicione-o ao grupo "Gerente"</li>
+                    <li>Faça login novamente para renovar o token</li>
+                    <li>Execute este teste</li>
+                </ol>
+            </div>
+            <div class="form-group">
+                <label for="tarefaIdDeleteGerente">ID da Tarefa para Deletar:</label>
+                <input type="text" id="tarefaIdDeleteGerente" placeholder="Ex: 10">
+            </div>
+            <button onclick="deletarComPermissao()">Deletar (Com Permissão de Gerente)</button>
+            <div id="deleteComPermResponse"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>✅ Esperado:</strong> Status 204 No Content - Tarefa deletada com sucesso
+            </div>
+        </div>
+
+        <!-- Resumo dos Testes -->
+        <div class="info" style="margin-top: 40px;">
+            <strong>📊 Resumo - Capítulo 6</strong>
+            <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.3);">
+                    <th style="text-align: left; padding: 10px; color: #00ffff;">Teste</th>
+                    <th style="text-align: left; padding: 10px; color: #00ffff;">Método</th>
+                    <th style="text-align: left; padding: 10px; color: #00ffff;">Endpoint</th>
+                    <th style="text-align: left; padding: 10px; color: #00ffff;">Esperado</th>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">6.1 - Registrar</td>
+                    <td style="padding: 10px;">POST</td>
+                    <td style="padding: 10px;">/api/register/</td>
+                    <td style="padding: 10px;">201 Created</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">6.2 - Isolamento</td>
+                    <td style="padding: 10px;">GET</td>
+                    <td style="padding: 10px;">/api/tarefas/</td>
+                    <td style="padding: 10px;">200 OK (apenas suas tarefas)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">6.3 - Bloqueio DELETE</td>
+                    <td style="padding: 10px;">DELETE</td>
+                    <td style="padding: 10px;">/api/tarefas/&lt;id&gt;/</td>
+                    <td style="padding: 10px;">403 Forbidden (grupo Comum)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;">6.4 - DELETE Sucesso</td>
+                    <td style="padding: 10px;">DELETE</td>
+                    <td style="padding: 10px;">/api/tarefas/&lt;id&gt;/</td>
+                    <td style="padding: 10px;">204 No Content (grupo Gerente)</td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -708,6 +834,160 @@
         // Mensagem de boas-vindas
         console.log('%c🔐 Sistema de Teste JWT', 'font-size: 20px; color: #667eea; font-weight: bold;');
         console.log('%cOs tokens serão armazenados apenas nesta sessão do navegador', 'color: #666;');
+
+        // ============================================
+        // CAPÍTULO 6: Testes de Segurança
+        // ============================================
+
+        async function registrarUsuario() {
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !email || !password) {
+                alert('Preencha todos os campos');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/register/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResponse('registroResponse', {
+                        message: '✅ Usuário registrado com sucesso!',
+                        usuario: data,
+                        proximo_passo: 'Faça login com suas credenciais acima'
+                    });
+                } else {
+                    showResponse('registroResponse', data, true);
+                }
+            } catch (error) {
+                showResponse('registroResponse', { error: error.message }, true);
+            }
+        }
+
+        async function getTarefasComSeguranca() {
+            if (!accessToken) {
+                alert('Faça login primeiro!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/tarefas/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResponse('tarefasSegurancaResponse', {
+                        message: '✅ Row Level Security: Apenas suas tarefas são retornadas',
+                        total_tarefas: Array.isArray(data) ? data.length : 0,
+                        tarefas: data
+                    });
+                } else {
+                    showResponse('tarefasSegurancaResponse', data, true);
+                }
+            } catch (error) {
+                showResponse('tarefasSegurancaResponse', { error: error.message }, true);
+            }
+        }
+
+        async function tentarDeletarSemPermissao() {
+            if (!accessToken) {
+                alert('Faça login primeiro!');
+                return;
+            }
+
+            const tarefaId = document.getElementById('tarefaIdDelete').value;
+            if (!tarefaId) {
+                alert('Digite o ID da tarefa');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/tarefas/${tarefaId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const data = await response.text();
+                
+                if (!response.ok) {
+                    try {
+                        const jsonData = JSON.parse(data);
+                        showResponse('deleteNaoPermResponse', {
+                            status: response.status,
+                            message: '❌ RBAC funcionando: Acesso negado',
+                            detalhes: jsonData
+                        }, true);
+                    } catch {
+                        showResponse('deleteNaoPermResponse', {
+                            status: response.status,
+                            message: '❌ RBAC funcionando: Acesso negado'
+                        }, true);
+                    }
+                } else {
+                    showResponse('deleteNaoPermResponse', {
+                        status: response.status,
+                        message: '⚠️ Tarefa foi deletada (você tem permissão?)'
+                    });
+                }
+            } catch (error) {
+                showResponse('deleteNaoPermResponse', { error: error.message }, true);
+            }
+        }
+
+        async function deletarComPermissao() {
+            if (!accessToken) {
+                alert('Faça login primeiro!');
+                return;
+            }
+
+            const tarefaId = document.getElementById('tarefaIdDeleteGerente').value;
+            if (!tarefaId) {
+                alert('Digite o ID da tarefa');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/tarefas/${tarefaId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (response.ok || response.status === 204) {
+                    showResponse('deleteComPermResponse', {
+                        status: response.status,
+                        message: '✅ RBAC funcionando: Tarefa deletada com sucesso!',
+                        detalhes: 'Você tem permissão de Gerente'
+                    });
+                } else {
+                    const data = await response.json();
+                    showResponse('deleteComPermResponse', {
+                        status: response.status,
+                        message: '❌ Falha na deleção',
+                        detalhes: data
+                    }, true);
+                }
+            } catch (error) {
+                showResponse('deleteComPermResponse', { error: error.message }, true);
+            }
+        }
     </script>
 </body>
 </html>
