@@ -6,7 +6,9 @@ class Tarefa(models.Model):
     User,
     on_delete=models.CASCADE,
     related_name='tarefas', 
-    verbose_name='Usuário'
+    verbose_name='Usuário',
+    null=False,
+    blank=False
     )
 
     titulo = models.CharField(

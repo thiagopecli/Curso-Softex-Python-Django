@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-
 logger = logging.getLogger(__name__)
 
 class ListaTarefasAPIView(APIView):
@@ -41,13 +40,11 @@ class ListaTarefasAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         except IntegrityError as e:
-            # Erro de constraint no banco (ex: UNIQUE)
             return Response(
                 {'error': 'Violação de integridade no banco de dados.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            # Erro inesperado
             logger.error(f"Erro ao criar tarefa: {str(e)}")
             return Response(
                 {'error': 'Erro interno do servidor.'},
@@ -55,6 +52,8 @@ class ListaTarefasAPIView(APIView):
             )
 
 class DetalheTarefaAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get_object(self, pk):
         return get_object_or_404(Tarefa, pk=pk)
     
@@ -92,11 +91,13 @@ class DetalheTarefaAPIView(APIView):
 
         serializer = TarefaSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 class ContagemTarefasAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         total = Tarefa.objects.count()
         concluidas = Tarefa.objects.filter(concluida=True).count()
@@ -108,6 +109,8 @@ class ContagemTarefasAPIView(APIView):
 })
 
 class EstatisticasTarefasAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         total = Tarefa.objects.count()
         concluidas = Tarefa.objects.filter(concluida=True).count()
@@ -123,6 +126,8 @@ class EstatisticasTarefasAPIView(APIView):
         })
     
 class ConcluirTarefaLoteAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def patch(self, request, format=None):
         ids = request.data.get("ids", [])
 
@@ -141,10 +146,8 @@ class ConcluirTarefaLoteAPIView(APIView):
         )
 
 class MinhaView(APIView):
-    # Adicionando a permissão
     permission_classes = [IsAuthenticated]
     def get(self, request):
-    # Se chegou aqui, request.user é SEMPRE um objeto User logado
         return Response(f"Usuario autenticado: (request.user.username)",
                         status=status.HTTP_200_OK,)
 
@@ -154,13 +157,64 @@ class LogoutView(APIView):
         try:
             refresh_token = request.data.get("refresh")
             token = RefreshToken(refresh_token)
-            token.blacklist() # Adiciona o token à lista negra
+            token.blacklist()
             return Response(
                 {"detail": "Logout realizado com sucesso."},
-                status=status.HTTP_205_RESET_CONTENT # 205 é a resposta padrão para "reset content"
+                status=status.HTTP_205_RESET_CONTENT
                 )
-        except Exception: # Captura exceções como token_not_valid
+        except Exception:
             return Response(
             {"detail": "Token inválido."},
             status=status.HTTP_400_BAD_REQUEST
     )
+        
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'is_staff': user.is_staff,
+            'date_joined': user.date_joined
+        })
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        
+        if not user.check_password(old_password):
+            return Response(
+                {'error': 'Senha atual incorreta'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        user.set_password(new_password)
+        user.save()
+        return Response({'detail': 'Senha alterada com sucesso'})
+
+class StatsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        tarefas_usuario = Tarefa.objects.filter(user=user)
+        
+        total_tarefas = tarefas_usuario.count()
+        concluidas = tarefas_usuario.filter(concluida=True).count()
+        pendentes = tarefas_usuario.filter(concluida=False).count()
+        
+        taxa_conclusao = concluidas / total_tarefas if total_tarefas > 0 else 0
+        
+        return Response({
+            'total_tarefas': total_tarefas,
+            'concluidas': concluidas,
+            'pendentes': pendentes,
+            'taxa_conclusao': round(taxa_conclusao, 2)
+        })
