@@ -2,17 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Tarefa
-from .serializers import TarefaSerializer
-from django.db import IntegrityError
-import logging
+from .serializers import TarefaSerializer, UserProfileSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, UserUpdateSerializer
 from django.contrib.auth.models import User
 from .permissions import IsGerente
+import logging
+from django.db import IntegrityError
 
 logger = logging.getLogger(__name__)
 
@@ -226,7 +226,7 @@ class StatsView(APIView):
 
 class TarefaListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = TarefaSerializer
-    permission_classes = [IsAuthenticated] # Exige Token válido
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         """
@@ -243,14 +243,19 @@ class TarefaRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         """
         Garante que operações de detalhe (GET, PUT, DELETE por ID)
-        só encontrem o objeto se ele pertencer ao usuário.
-        Gerentes ou superusers podem acessar todas as tarefas.
+        retornem todas as tarefas se for admin/staff, 
+        ou apenas as do usuário logado se for usuário comum.
+        
+        EXERCÍCIO 2: Se o usuário for is_staff, retorna todas as tarefas.
+        Se não, retorna apenas filter(user=user).
         """
         user = self.request.user
 
-        if user.is_superuser or user.groups.filter(name='Gerente').exists():
+        if user.is_staff:
             return Tarefa.objects.all()
+        
         return Tarefa.objects.filter(user=user)
+    
     def get_permissions(self):
         """
         Instancia e retorna a lista de permissões que esta view requer,
@@ -260,12 +265,35 @@ class TarefaRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
             return [IsAuthenticated(), IsGerente()]
         return [IsAuthenticated()]
 
-
 class RegisterView(generics.CreateAPIView):
     """
     Endpoint para cadastro de novos usuários.
     Acesso: Público (Qualquer um pode criar conta).
     """
     queryset = User.objects.all()
-    permission_classes = [AllowAny] # Sobrescreve o padrão global
+    permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
+class UserUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserUpdateSerializer
+
+    def get_object(self):
+        return self.request.user
+class UserMeRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Endpoint que retorna os dados do próprio usuário logado.
+    URL: GET /api/me/
+    
+    Retorna: id, username, email, cargo (nome do grupo)
+    Permissão: Requer autenticação
+    """
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        """
+        Retorna sempre o usuário do request (usuário logado).
+        Não precisa de pk na URL.
+        """
+        return self.request.user

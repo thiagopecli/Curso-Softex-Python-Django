@@ -12,7 +12,9 @@ from .views import (
     StatsView,
     TarefaListCreateAPIView,
     TarefaRetrieveUpdateDestroyAPIView,
-    RegisterView
+    RegisterView,
+    UserMeRetrieveAPIView,
+    UserUpdateAPIView
 )
 
 app_name = 'core'
@@ -26,6 +28,8 @@ urlpatterns = [
     path('teste/', MinhaView.as_view(), name='teste-autenticidade'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('me/', MeView.as_view(), name='me'),
+    path('me-profile/', UserMeRetrieveAPIView.as_view(), name='me-profile'),
+    path('user/update/', UserUpdateAPIView.as_view(), name='user-update'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('stats/', StatsView.as_view(), name='stats'),
     path('register/', RegisterView.as_view(), name='register'),

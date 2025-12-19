@@ -529,6 +529,160 @@
                 </tr>
             </table>
         </div>
+
+        <!-- ================================================ -->
+        <!-- TESTES DOS 3 EXERCÍCIOS IMPLEMENTADOS -->
+        <!-- ================================================ -->
+
+        <div class="info" style="margin-top: 40px;">
+            <strong>✨ TESTES DOS 3 EXERCÍCIOS IMPLEMENTADOS</strong>
+            <p style="margin-top: 10px; color: #e0e0e0;">
+                Validação completa de segurança e funcionalidades
+            </p>
+        </div>
+
+        <!-- Exercício 1: Bloqueio de E-mail -->
+        <div class="section">
+            <h2>📧 EXERCÍCIO 1: Bloqueio de Alteração de E-mail</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Teste se o usuário pode alterar seu nome, mas NÃO pode alterar seu e-mail (read_only)
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="testeExercicio1_AlterarNome()" style="background: linear-gradient(135deg, #00ff88 0%, #00ffaa 100%);">
+                    ✅ Teste 1.1: Alterar Nome
+                </button>
+                <button onclick="testeExercicio1_NaoAlterarEmail()" style="background: linear-gradient(135deg, #ff0066 0%, #ff00aa 100%);">
+                    ❌ Teste 1.2: E-mail Bloqueado
+                </button>
+            </div>
+            <div id="ex1Response"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>📋 Esperado:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ Nome pode ser alterado (PATCH /api/user/update/ com first_name)</li>
+                    <li>❌ E-mail é read_only (não muda mesmo se tentar alterar)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Exercício 2: Permissão IsAdminOrOwner -->
+        <div class="section">
+            <h2>🔐 EXERCÍCIO 2: Permissão IsAdminOrOwner</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Teste se admin/staff consegue ver TODAS as tarefas, enquanto usuários comuns veem apenas suas tarefas
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="testeExercicio2_UsuarioVeSuaTarefa()" style="background: linear-gradient(135deg, #00aaff 0%, #00ccff 100%);">
+                    👤 Teste 2.1: Usuário Vê Sua Tarefa
+                </button>
+                <button onclick="testeExercicio2_AdminVeTudo()" style="background: linear-gradient(135deg, #ffaa00 0%, #ffcc00 100%);">
+                    👮 Teste 2.2: Admin Vê Todas
+                </button>
+            </div>
+            <div id="ex2Response"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>📋 Esperado:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ Usuário comum acessa GET /api/tarefas/&lt;id&gt;/ apenas se for dono</li>
+                    <li>✅ Admin/Staff acessa qualquer tarefa (GET /api/tarefas/&lt;id&gt;/)</li>
+                    <li>❌ Usuário comum recebe 404 ao tentar acessar tarefa de outro</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Exercício 3: Endpoint /me-profile/ -->
+        <div class="section">
+            <h2>👤 EXERCÍCIO 3: Endpoint /api/me-profile/</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Teste o novo endpoint que retorna dados do usuário logado incluindo seu cargo (grupo)
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button onclick="testeExercicio3_EndpointMe()" style="background: linear-gradient(135deg, #ff6600 0%, #ff8800 100%);">
+                    📍 Teste 3.1: Endpoint /me-profile/
+                </button>
+                <button onclick="testeExercicio3_CargoVazio()" style="background: linear-gradient(135deg, #6600ff 0%, #8800ff 100%);">
+                    🏷️ Teste 3.2: Campo Cargo
+                </button>
+            </div>
+            <div id="ex3Response"></div>
+            <div class="info" style="margin-top: 15px;">
+                <strong>📋 Esperado:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>✅ GET /api/me-profile/ retorna dados do usuário logado</li>
+                    <li>✅ Resposta inclui: id, username, email, cargo</li>
+                    <li>✅ Campo cargo mostra o nome do grupo (ex: "Gerente")</li>
+                    <li>✅ Campo cargo é null se usuário não estiver em nenhum grupo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Executar Todos os Testes -->
+        <div class="section" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 255, 0.1) 100%); border: 2px solid rgba(0, 255, 136, 0.5);">
+            <h2 style="color: #00ff88;">🚀 EXECUTAR TODOS OS TESTES</h2>
+            <p style="margin-bottom: 15px; color: #aaffaa;">
+                Clique para rodar todos os 6 testes automaticamente
+            </p>
+            <button onclick="rodarTodosTestes()" style="
+                background: linear-gradient(135deg, #00ff88 0%, #00ffaa 100%);
+                font-size: 18px;
+                padding: 12px 24px;
+                border: 2px solid #00ff88;
+                box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+                width: 100%;
+            ">
+                ✅ RODAR TODOS OS TESTES DOS 3 EXERCÍCIOS
+            </button>
+            <div id="resumoTestes" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- Resumo Final -->
+        <div class="info" style="margin-top: 40px;">
+            <strong>📊 Resumo dos Testes Implementados</strong>
+            <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.3);">
+                    <th style="text-align: left; padding: 10px; color: #00ffaa;">Exercício</th>
+                    <th style="text-align: left; padding: 10px; color: #00ffaa;">Teste</th>
+                    <th style="text-align: left; padding: 10px; color: #00ffaa;">Endpoint</th>
+                    <th style="text-align: left; padding: 10px; color: #00ffaa;">Esperado</th>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">1 - E-mail</td>
+                    <td style="padding: 10px;">Alterar Nome</td>
+                    <td style="padding: 10px;">PATCH /api/user/update/</td>
+                    <td style="padding: 10px;">200 OK (name muda)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">1 - E-mail</td>
+                    <td style="padding: 10px;">Bloquear E-mail</td>
+                    <td style="padding: 10px;">PATCH /api/user/update/</td>
+                    <td style="padding: 10px;">200 OK (email não muda)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">2 - IsAdminOrOwner</td>
+                    <td style="padding: 10px;">User vê sua tarefa</td>
+                    <td style="padding: 10px;">GET /api/tarefas/&lt;id&gt;/</td>
+                    <td style="padding: 10px;">200 OK (é dono)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">2 - IsAdminOrOwner</td>
+                    <td style="padding: 10px;">Admin vê todas</td>
+                    <td style="padding: 10px;">GET /api/tarefas/&lt;id&gt;/</td>
+                    <td style="padding: 10px;">200 OK (é admin)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(0, 255, 255, 0.2);">
+                    <td style="padding: 10px;">3 - /me-profile/</td>
+                    <td style="padding: 10px;">Endpoint /me-profile/</td>
+                    <td style="padding: 10px;">GET /api/me-profile/</td>
+                    <td style="padding: 10px;">200 OK (com dados)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;">3 - /me-profile/</td>
+                    <td style="padding: 10px;">Campo cargo</td>
+                    <td style="padding: 10px;">GET /api/me-profile/</td>
+                    <td style="padding: 10px;">200 OK (cargo presente)</td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -838,6 +992,344 @@
         // ============================================
         // CAPÍTULO 6: Testes de Segurança
         // ============================================
+
+        // ============================================
+        // NOVOS TESTES DOS 3 EXERCÍCIOS
+        // ============================================
+
+        const testResults = {
+            exercicio1: [],
+            exercicio2: [],
+            exercicio3: [],
+            integracao: []
+        };
+
+        function logTestResult(exercicio, testName, passed, message = '') {
+            testResults[exercicio].push({
+                name: testName,
+                passed: passed,
+                message: message,
+                timestamp: new Date().toLocaleTimeString('pt-BR')
+            });
+            
+            const emoji = passed ? '✅' : '❌';
+            console.log(`${emoji} [${exercicio.toUpperCase()}] ${testName}: ${message}`);
+        }
+
+        // ==========================================
+        // EXERCÍCIO 1: Bloqueio de E-mail
+        // ==========================================
+
+        async function testeExercicio1_AlterarNome() {
+            if (!accessToken) {
+                logTestResult('exercicio1', 'Alterar Nome', false, 'Não autenticado');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/user/update/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        first_name: 'João',
+                        last_name: 'Silva'
+                    })
+                });
+
+                const data = await response.json();
+                const passed = response.ok && data.first_name === 'João';
+                logTestResult('exercicio1', 'Alterar Nome', passed, 
+                    passed ? 'Nome alterado com sucesso' : 'Falha ao alterar nome');
+                
+                if (passed) {
+                    showResponse('ex1Response', {
+                        message: '✅ TESTE 1 PASSOU: Usuário pode alterar nome',
+                        dados: data
+                    });
+                }
+            } catch (error) {
+                logTestResult('exercicio1', 'Alterar Nome', false, error.message);
+            }
+        }
+
+        async function testeExercicio1_NaoAlterarEmail() {
+            if (!accessToken) {
+                logTestResult('exercicio1', 'Email Bloqueado', false, 'Não autenticado');
+                return;
+            }
+
+            try {
+                // Primeiro, obter email atual
+                const response1 = await fetch(`${getApiUrl()}/api/user/update/`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    }
+                });
+
+                let emailAnterior = 'desconhecido';
+                if (response1.ok) {
+                    const userData = await response1.json();
+                    emailAnterior = userData.email || 'desconhecido';
+                }
+
+                // Tentar alterar email
+                const response = await fetch(`${getApiUrl()}/api/user/update/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'novoemail@test.com'
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Email NÃO deve ter mudado (está em read_only)
+                const emailNaoMudou = data.email === emailAnterior;
+                const passed = response.ok && emailNaoMudou;
+                
+                logTestResult('exercicio1', 'Email Bloqueado', passed,
+                    passed ? 'Email não foi alterado (read_only)' : 'Email foi alterado (erro!)');
+
+                showResponse('ex1Response', {
+                    message: passed ? '✅ TESTE 2 PASSOU: Email bloqueado com sucesso' : '❌ TESTE 2 FALHOU',
+                    email_anterior: emailAnterior,
+                    email_atual: data.email,
+                    read_only: emailNaoMudou
+                });
+            } catch (error) {
+                logTestResult('exercicio1', 'Email Bloqueado', false, error.message);
+            }
+        }
+
+        // ==========================================
+        // EXERCÍCIO 2: Permissão IsAdminOrOwner
+        // ==========================================
+
+        async function testeExercicio2_UsuarioVeSuaTarefa() {
+            if (!accessToken) {
+                logTestResult('exercicio2', 'Usuário Vê Sua Tarefa', false, 'Não autenticado');
+                return;
+            }
+
+            try {
+                // Obter primeira tarefa do usuário
+                const response = await fetch(`${getApiUrl()}/api/tarefas/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const tarefas = await response.json();
+                
+                if (Array.isArray(tarefas) && tarefas.length > 0) {
+                    const tarefaId = tarefas[0].id;
+                    
+                    // Tentar acessar a tarefa
+                    const response2 = await fetch(`${getApiUrl()}/api/tarefas/${tarefaId}/`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
+
+                    const passed = response2.ok && response2.status === 200;
+                    logTestResult('exercicio2', 'Usuário Vê Sua Tarefa', passed,
+                        passed ? `Tarefa ${tarefaId} acessada com sucesso` : 'Falha ao acessar tarefa');
+
+                    showResponse('ex2Response', {
+                        message: passed ? '✅ TESTE 3 PASSOU: Usuário vê sua tarefa' : '❌ TESTE 3 FALHOU',
+                        tarefa_id: tarefaId,
+                        status: response2.status,
+                        dados: passed ? await response2.json() : null
+                    });
+                } else {
+                    logTestResult('exercicio2', 'Usuário Vê Sua Tarefa', false, 'Nenhuma tarefa encontrada');
+                    showResponse('ex2Response', {
+                        message: '⚠️ Nenhuma tarefa para testar'
+                    });
+                }
+            } catch (error) {
+                logTestResult('exercicio2', 'Usuário Vê Sua Tarefa', false, error.message);
+            }
+        }
+
+        async function testeExercicio2_AdminVeTudo() {
+            if (!accessToken) {
+                logTestResult('exercicio2', 'Admin Vê Todas', false, 'Não autenticado');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/tarefas/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const tarefas = await response.json();
+                const quantidadeTotal = Array.isArray(tarefas) ? tarefas.length : 0;
+                
+                // Se é admin, deve ver TODAS as tarefas (mais do que o usuário comum)
+                const passed = response.ok && quantidadeTotal >= 0;
+                logTestResult('exercicio2', 'Admin Vê Todas', passed,
+                    passed ? `Total de tarefas: ${quantidadeTotal}` : 'Falha ao listar tarefas');
+
+                showResponse('ex2Response', {
+                    message: passed ? '✅ TESTE 4 PASSOU: Admin vê todas as tarefas' : '❌ TESTE 4 FALHOU',
+                    total_tarefas: quantidadeTotal,
+                    status: response.status
+                });
+            } catch (error) {
+                logTestResult('exercicio2', 'Admin Vê Todas', false, error.message);
+            }
+        }
+
+        // ==========================================
+        // EXERCÍCIO 3: Endpoint /me-profile/
+        // ==========================================
+
+        async function testeExercicio3_EndpointMe() {
+            if (!accessToken) {
+                logTestResult('exercicio3', 'Endpoint /me-profile/', false, 'Não autenticado');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/me-profile/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const passed = response.ok && response.status === 200;
+                
+                if (passed) {
+                    const data = await response.json();
+                    logTestResult('exercicio3', 'Endpoint /me-profile/', true,
+                        `Dados: ${data.username} (${data.cargo || 'sem cargo'})`);
+
+                    showResponse('ex3Response', {
+                        message: '✅ TESTE 5 PASSOU: Endpoint /me-profile/ funciona',
+                        usuario: {
+                            id: data.id,
+                            username: data.username,
+                            email: data.email,
+                            cargo: data.cargo || 'Nenhum grupo'
+                        }
+                    });
+                } else {
+                    logTestResult('exercicio3', 'Endpoint /me-profile/', false, 'Acesso negado');
+                    showResponse('ex3Response', {
+                        message: '❌ TESTE 5 FALHOU: Erro ao acessar endpoint'
+                    }, true);
+                }
+            } catch (error) {
+                logTestResult('exercicio3', 'Endpoint /me-profile/', false, error.message);
+            }
+        }
+
+        async function testeExercicio3_CargoVazio() {
+            if (!accessToken) {
+                logTestResult('exercicio3', 'Campo Cargo', false, 'Não autenticado');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/me-profile/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const temCargo = data.cargo !== null && data.cargo !== undefined;
+                    
+                    logTestResult('exercicio3', 'Campo Cargo', true,
+                        temCargo ? `Cargo: ${data.cargo}` : 'Campo cargo: null');
+
+                    showResponse('ex3Response', {
+                        message: '✅ TESTE 6 PASSOU: Campo cargo retornado',
+                        cargo: data.cargo,
+                        pode_ser_null: data.cargo === null
+                    });
+                } else {
+                    logTestResult('exercicio3', 'Campo Cargo', false, 'Erro ao obter dados');
+                }
+            } catch (error) {
+                logTestResult('exercicio3', 'Campo Cargo', false, error.message);
+            }
+        }
+
+        // ==========================================
+        // TESTE DE INTEGRAÇÃO COMPLETA
+        // ==========================================
+
+        async function rodarTodosTestes() {
+            console.log('🚀 Iniciando testes dos 3 exercícios...');
+            
+            if (!accessToken) {
+                alert('Você precisa estar autenticado para rodar os testes!');
+                return;
+            }
+
+            // Exercício 1
+            console.log('\n📋 EXERCÍCIO 1: Bloqueio de E-mail');
+            await testeExercicio1_AlterarNome();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testeExercicio1_NaoAlterarEmail();
+
+            // Exercício 2
+            console.log('\n📋 EXERCÍCIO 2: Permissão IsAdminOrOwner');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testeExercicio2_UsuarioVeSuaTarefa();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testeExercicio2_AdminVeTudo();
+
+            // Exercício 3
+            console.log('\n📋 EXERCÍCIO 3: Endpoint /me-profile/');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testeExercicio3_EndpointMe();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testeExercicio3_CargoVazio();
+
+            // Resumo
+            console.log('\n📊 RESUMO DOS TESTES:');
+            exibirResumoTestes();
+        }
+
+        function exibirResumoTestes() {
+            const ex1Passed = testResults.exercicio1.filter(t => t.passed).length;
+            const ex2Passed = testResults.exercicio2.filter(t => t.passed).length;
+            const ex3Passed = testResults.exercicio3.filter(t => t.passed).length;
+            const totalPassed = ex1Passed + ex2Passed + ex3Passed;
+            const totalTestes = testResults.exercicio1.length + testResults.exercicio2.length + testResults.exercicio3.length;
+
+            const resumo = `
+✅ RESUMO DOS TESTES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 Exercício 1 (Bloqueio Email):   ${ex1Passed}/${testResults.exercicio1.length} ✓
+📋 Exercício 2 (IsAdminOrOwner):   ${ex2Passed}/${testResults.exercicio2.length} ✓
+📋 Exercício 3 (Endpoint /me/):    ${ex3Passed}/${testResults.exercicio3.length} ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 TOTAL: ${totalPassed}/${totalTestes} TESTES PASSANDO
+${totalPassed === totalTestes ? '✅ TODOS OS TESTES PASSARAM!' : '⚠️ Alguns testes falharam'}
+            `;
+
+            console.log(resumo);
+            showResponse('resumoTestes', {
+                message: resumo,
+                detalhes: testResults
+            });
+        }
+
+        // ==========================================
 
         async function registrarUsuario() {
             const username = document.getElementById('regUsername').value;

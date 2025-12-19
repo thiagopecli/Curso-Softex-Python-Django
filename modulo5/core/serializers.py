@@ -98,3 +98,32 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             pass
 
         return user
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer para atualização de dados do usuário.
+    O email é read_only (não pode ser alterado após cadastro).
+    """
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+        read_only_fields = ['email']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer para exibir os dados do perfil do usuário logado.
+    Inclui o campo 'cargo' que mostra o nome do grupo do usuário.
+    """
+    cargo = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'cargo']
+    
+    def get_cargo(self, obj):
+        """
+        Retorna o nome do primeiro grupo do usuário, ou None se não tiver.
+        Você pode alterar isso para retornar todos os grupos se necessário.
+        """
+        grupo = obj.groups.first()
+        return grupo.name if grupo else None
